@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grão Fundo — Café torrado na semana, em Florianópolis</title>
+  <meta name="description" content="Micro-torrefação em Florianópolis. Café torrado toda semana, em lotes pequenos, com a data de torra impressa no pacote.">
+  <style>
+    :root {
+      --bg: #FAF6EF;
+      --bg-alt: #F1E8DA;
+      --surface: #FFFFFF;
+      --ink: #2A1A12;
+      --ink-soft: #5E4A3E;
+      --accent: #A94A1A;
+      --accent-dark: #8A3A12;
+      --dark: #24150E;
+      --line: #E3D6C3;
+      --radius: 16px;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    h1, h2, h3 { font-family: var(--serif); line-height: 1.15; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+    p { margin: 0; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+    .container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    .section { padding: 72px 0; }
+    .section--alt { background: var(--bg-alt); }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title { font-size: clamp(1.9rem, 5vw, 2.75rem); margin-bottom: 14px; }
+    .section-lead { color: var(--ink-soft); max-width: 60ch; font-size: 1.125rem; }
+    .section-head { margin-bottom: 40px; }
+
+    /* Botões */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 52px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color .2s, color .2s, border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn--primary { background: var(--accent); color: #fff; box-shadow: 0 6px 18px rgba(169, 74, 26, .35); }
+    .btn--primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(169, 74, 26, .45); }
+    .btn--ghost { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .6); }
+    .btn--ghost:hover { background: rgba(255, 255, 255, .14); border-color: #fff; }
+    .btn--outline { background: transparent; color: var(--accent); border-color: var(--accent); min-height: 46px; padding: 10px 22px; }
+    .btn--outline:hover { background: var(--accent); color: #fff; }
+
+    /* Cabeçalho */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(250, 246, 239, .94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand__dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); display: inline-block; }
+    .menu-toggle {
+      background: none; border: 2px solid var(--ink); border-radius: 10px;
+      width: 44px; height: 44px; cursor: pointer; color: var(--ink);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background-color .2s, color .2s;
+    }
+    .menu-toggle:hover { background: var(--ink); color: var(--bg); }
+    .nav {
+      display: none;
+      position: absolute; top: 64px; left: 0; right: 0;
+      background: var(--bg); border-bottom: 1px solid var(--line);
+      padding: 8px 20px 20px;
+    }
+    .nav.is-open { display: block; }
+    .nav ul { list-style: none; margin: 0; padding: 0; }
+    .nav a:not(.btn) { display: block; padding: 14px 0; text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--line); cursor: pointer; transition: color .2s; }
+    .nav a:not(.btn):hover { color: var(--accent); }
+    .nav .btn { margin-top: 16px; width: 100%; }
+
+    /* Hero */
+    .hero { position: relative; color: #fff; min-height: 82vh; display: flex; align-items: center; overflow: hidden; background: var(--dark); }
+    .hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 55%; }
+    .hero::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(28, 15, 9, .78) 0%, rgba(28, 15, 9, .72) 100%);
+    }
+    .hero__content { position: relative; z-index: 1; padding: 72px 0; }
+    .hero__badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 16px; border-radius: 999px;
+      background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .3);
+      font-size: .9rem; font-weight: 600; margin-bottom: 24px;
+    }
+    .hero__badge::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #F2A66B; }
+    .hero h1 { font-size: clamp(2.4rem, 8.5vw, 4.5rem); max-width: 15ch; margin-bottom: 20px; }
+    .hero__sub { font-size: clamp(1.05rem, 3vw, 1.3rem); max-width: 46ch; color: rgba(255, 255, 255, .92); margin-bottom: 32px; }
+    .hero__actions { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Cafés */
+    .grid-3 { display: grid; gap: 24px; }
+    .coffee {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 28px; display: flex; flex-direction: column;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .coffee:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(42, 26, 18, .12); }
+    .coffee__tag { align-self: flex-start; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); background: #F7E6DA; padding: 5px 12px; border-radius: 999px; margin-bottom: 16px; }
+    .coffee__region { color: var(--ink-soft); font-size: .95rem; margin: 4px 0 16px; }
+    .coffee__notes { flex: 1; margin-bottom: 20px; }
+    .coffee__level { display: flex; align-items: center; gap: 12px; font-size: .9rem; color: var(--ink-soft); margin-bottom: 20px; }
+    .dots { display: inline-flex; gap: 5px; }
+    .dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+    .dots .on { background: var(--accent); }
+    .coffee__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 20px; }
+    .price { font-family: var(--serif); font-size: 1.75rem; font-weight: 700; line-height: 1; }
+    .price small { display: block; font-family: var(--sans); font-size: .8rem; font-weight: 400; color: var(--ink-soft); margin-top: 4px; }
+
+    /* Diferenciais */
+    .split { display: grid; gap: 40px; align-items: center; }
+    .photo { position: relative; border-radius: var(--radius); overflow: hidden; background: var(--dark); }
+    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo--tall { aspect-ratio: 4 / 3; }
+    .photo--tall img { object-position: 50% 42%; }
+    .points { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 28px; counter-reset: p; }
+    .points li { display: grid; grid-template-columns: 48px 1fr; gap: 16px; }
+    .points li::before {
+      counter-increment: p; content: counter(p);
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif); font-size: 1.25rem; font-weight: 700;
+    }
+    .points h3 { font-size: 1.3rem; margin-bottom: 6px; }
+    .points p { color: var(--ink-soft); }
+
+    /* Escolha */
+    .photo--wide { aspect-ratio: 16 / 9; }
+    .photo--wide img { transform: scale(1.04); object-position: 30% 45%; }
+    .picks { display: grid; gap: 16px; }
+    .pick {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 22px 24px;
+    }
+    .pick__who { font-size: .85rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 4px; }
+    .pick__what { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; color: var(--accent); }
+    .pick p:last-child { color: var(--ink-soft); }
+
+    /* Depoimentos */
+    .quote { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    .quote blockquote { margin: 0; font-size: 1.1rem; }
+    .quote blockquote::before { content: "“"; display: block; font-family: var(--serif); font-size: 3rem; line-height: .6; color: var(--accent); margin-bottom: 8px; }
+    .quote figcaption { display: flex; align-items: center; gap: 14px; margin-top: auto; }
+    .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--bg-alt); color: var(--accent); font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .quote strong { display: block; }
+    .quote span { color: var(--ink-soft); font-size: .92rem; }
+
+    /* Assinatura */
+    .cta { position: relative; color: #fff; background: var(--dark); overflow: hidden; text-align: center; }
+    .cta__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+    .cta::after { content: ""; position: absolute; inset: 0; background: rgba(28, 15, 9, .8); }
+    .cta .container { position: relative; z-index: 1; }
+    .cta .eyebrow { color: #F2A66B; }
+    .cta .section-title { max-width: 18ch; margin-left: auto; margin-right: auto; }
+    .cta .section-lead { color: rgba(255, 255, 255, .9); margin: 0 auto 32px; }
+    .offers { display: grid; gap: 16px; margin: 0 auto 36px; max-width: 640px; }
+    .offer { background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .25); border-radius: var(--radius); padding: 22px; }
+    .offer strong { display: block; font-family: var(--serif); font-size: 2.25rem; line-height: 1.1; color: #F2A66B; }
+    .offer span { color: rgba(255, 255, 255, .92); }
+
+    /* Rodapé */
+    .footer { background: var(--dark); color: rgba(255, 255, 255, .85); padding: 64px 0 32px; }
+    .footer__grid { display: grid; gap: 36px; }
+    .footer h3 { font-family: var(--sans); font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; color: #F2A66B; margin-bottom: 14px; }
+    .footer .brand { color: #fff; margin-bottom: 12px; }
+    .footer address { font-style: normal; }
+    .footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    .footer a { text-decoration: none; cursor: pointer; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+    .footer a:hover { color: #fff; border-color: #F2A66B; }
+    .footer__legal { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, .15); font-size: .88rem; color: rgba(255, 255, 255, .6); }
+
+    /* Entrada suave (só quando há JS) */
+    .js .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .js .reveal.is-visible { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js .reveal { opacity: 1; transform: none; transition: none; }
+      .btn, .coffee { transition: none; }
+    }
+
+    @media (min-width: 720px) {
+      .hero__actions { flex-direction: row; }
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+      .offers { grid-template-columns: 1fr 1fr; }
+      .footer__grid { grid-template-columns: 1.4fr 1fr 1fr; }
+      .section { padding: 96px 0; }
+    }
+
+    @media (min-width: 960px) {
+      .menu-toggle { display: none; }
+      .nav { display: block; position: static; background: none; border: 0; padding: 0; }
+      .nav ul { display: flex; align-items: center; gap: 28px; }
+      .nav a:not(.btn) { border: 0; padding: 6px 0; }
+      .nav .btn { margin: 0; width: auto; min-height: 42px; padding: 8px 20px; }
+      .split { grid-template-columns: 1fr 1fr; gap: 72px; }
+      .split--reverse .split__media { order: 2; }
+      .photo--tall { aspect-ratio: 4 / 5; }
+      .photo--wide { aspect-ratio: auto; height: 100%; min-height: 460px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a href="#topo" class="brand" aria-label="Grão Fundo, início"><span class="brand__dot" aria-hidden="true"></span>Grão Fundo</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="menu" aria-label="Navegação principal">
+        <ul>
+          <li><a href="#cafes">Nossos cafés</a></li>
+          <li><a href="#diferenca">Por que somos diferentes</a></li>
+          <li><a href="#escolha">Qual escolher</a></li>
+          <li><a href="#depoimentos">Clientes</a></li>
+          <li><a href="#loja">A loja</a></li>
+          <li><a href="#assinatura" class="btn btn--primary">Assinar</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="topo">
+
+    <section class="hero" aria-labelledby="hero-titulo">
+      <img class="hero__img" src="images/alexas_fotos-coffee-beans-1291656_1920.jpg" width="1920" height="1277" alt="Grãos de café torrado em close, brilhantes e marrom-escuros, sobre uma superfície clara">
+      <div class="container hero__content">
+        <p class="hero__badge">Última torra: <strong data-roast-date>esta semana</strong></p>
+        <h1 id="hero-titulo">Café torrado esta semana. Não no mês passado.</h1>
+        <p class="hero__sub">Torramos uma vez por semana, em lotes pequenos, e imprimimos a data em cada pacote. Você sabe exatamente de quando é o café que vai tomar.</p>
+        <div class="hero__actions">
+          <a href="#cafes" class="btn btn--primary">Quero experimentar</a>
+          <a href="#loja" class="btn btn--ghost">Conhecer a loja</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cafes" aria-labelledby="cafes-titulo">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Nossos cafés</span>
+          <h2 class="section-title" id="cafes-titulo">Três cafés. Todos fáceis de gostar.</h2>
+          <p class="section-lead">Cada pacote tem 250 g de grãos recém-torrados. Se não souber por onde começar, comece pelo mais suave.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="coffee reveal">
+            <span class="coffee__tag">Bom para começar</span>
+            <h3>Cerrado Mineiro</h3>
+            <p class="coffee__region">Cerrado, Minas Gerais</p>
+            <p class="coffee__notes">Um café doce e redondo. Lembra chocolate ao leite e castanha, sem amargo forte no final.</p>
+            <div class="coffee__level">
+              <span class="dots" role="img" aria-label="Intensidade 2 de 5"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></span>
+              Intensidade: suave
+            </div>
+            <div class="coffee__foot">
+              <p class="price">R$ 42<small>pacote de 250 g</small></p>
+              <a href="#loja" class="btn btn--outline">Pedir</a>
+            </div>
+          </article>
+
+          <article class="coffee reveal">
+            <span class="coffee__tag">Queridinho da casa</span>
+            <h3>Alta Mogiana</h3>
+            <p class="coffee__region">Alta Mogiana, São Paulo</p>
+            <p class="coffee__notes">Tem gosto de caramelo, com um toque de laranja que deixa a xícara viva. Nem fraco, nem forte.</p>
+            <div class="coffee__level">
+              <span class="dots" role="img" aria-label="Intensidade 3 de 5"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></span>
+              Intensidade: equilibrada
+            </div>
+            <div class="coffee__foot">
+              <p class="price">R$ 46<small>pacote de 250 g</small></p>
+              <a href="#loja" class="btn btn--outline">Pedir</a>
+            </div>
+          </article>
+
+          <article class="coffee reveal">
+            <span class="coffee__tag">Para ir além</span>
+            <h3>Chapada Diamantina</h3>
+            <p class="coffee__region">Chapada Diamantina, Bahia</p>
+            <p class="coffee__notes">Frutas vermelhas e cacau, com mais camadas de sabor. Para quem já gosta de café e quer sair do óbvio.</p>
+            <div class="coffee__level">
+              <span class="dots" role="img" aria-label="Intensidade 4 de 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></span>
+              Intensidade: marcante
+            </div>
+            <div class="coffee__foot">
+              <p class="price">R$ 58<small>pacote de 250 g</small></p>
+              <a href="#loja" class="btn btn--outline">Pedir</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="diferenca" aria-labelledby="dif-titulo">
+      <div class="container split">
+        <div class="split__media reveal">
+          <div class="photo photo--tall">
+            <img src="images/chernyshart-coffee-9817625_1920.jpg" width="1279" height="1920" loading="lazy" alt="Xícara branca de cappuccino com desenho de folha na espuma, cercada por grãos de café e bombons de chocolate">
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Por que é diferente</span>
+          <h2 class="section-title" id="dif-titulo">Café fresco muda o que você sente na xícara.</h2>
+          <p class="section-lead">Café perde sabor com o tempo, como pão. Por isso fazemos de um jeito simples.</p>
+          <ol class="points" style="list-style:none;padding:0;margin-bottom:0">
+            <li>
+              <div>
+                <h3>Torra semanal, com data no pacote</h3>
+                <p>Torramos toda semana, em lotes pequenos. A data está impressa no pacote e nada fica mais de 30 dias na prateleira.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>Direto do produtor</h3>
+                <p>Compramos dos mesmos produtores há anos, sem intermediário. Eles recebem melhor e você sabe de onde o café veio.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>Guia de preparo em todo pedido</h3>
+                <p>Junto com o café vai um guia curto, em linguagem simples. Mostra quanto pó usar e como fazer no coador, na prensa francesa ou na cafeteira que você já tem.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="escolha" aria-labelledby="escolha-titulo">
+      <div class="container split split--reverse">
+        <div class="split__media reveal">
+          <div class="photo photo--wide">
+            <img src="images/christoph-coffee-171653_1920.jpg" width="1920" height="1280" loading="lazy" alt="Xícara laranja virada sobre o pires, derramando grãos de café torrado numa superfície escura">
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Ajuda para escolher</span>
+          <h2 class="section-title" id="escolha-titulo">Não sabe qual pegar?</h2>
+          <p class="section-lead" style="margin-bottom:28px">Sem problema. Conte como você toma café e a gente indica.</p>
+          <div class="picks">
+            <div class="pick">
+              <p class="pick__who">Você toma com leite</p>
+              <p class="pick__what">Alta Mogiana</p>
+              <p>O caramelo combina com o leite e deixa a xícara cremosa.</p>
+            </div>
+            <div class="pick">
+              <p class="pick__who">Você toma puro</p>
+              <p class="pick__what">Cerrado Mineiro</p>
+              <p>É doce por natureza, então dá para tomar sem açúcar e sem fazer careta.</p>
+            </div>
+            <div class="pick">
+              <p class="pick__who">Você quer provar de tudo</p>
+              <p class="pick__what">Os três cafés</p>
+              <p>Pegue os três pacotes. Passa de R$ 120, então o frete sai de graça.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="depoimentos" aria-labelledby="dep-titulo">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Quem já provou</span>
+          <h2 class="section-title" id="dep-titulo">O que os clientes dizem</h2>
+        </div>
+        <div class="grid-3">
+          <figure class="quote reveal">
+            <blockquote>Eu achava que café bom era coisa de especialista. Abri o pacote e o cheiro já mudou minha manhã. O guia de preparo foi o que mais ajudou.</blockquote>
+            <figcaption><span class="avatar" aria-hidden="true">MC</span><div><strong>Mariana Costa</strong><span>Florianópolis, SC</span></div></figcaption>
+          </figure>
+          <figure class="quote reveal">
+            <blockquote>Gostei de ver a data de torra no pacote. Nunca tinha visto isso. O Cerrado Mineiro virou o café da casa, até meu marido, que reclamava de tudo, aprovou.</blockquote>
+            <figcaption><span class="avatar" aria-hidden="true">RP</span><div><strong>Rafael Pinheiro</strong><span>Joinville, SC</span></div></figcaption>
+          </figure>
+          <figure class="quote reveal">
+            <blockquote>Fiz a assinatura há quatro meses. O café chega fresco, o preço compensa e a Chapada Diamantina é a melhor coisa que já coei.</blockquote>
+            <figcaption><span class="avatar" aria-hidden="true">LA</span><div><strong>Letícia Andrade</strong><span>Curitiba, PR</span></div></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" id="assinatura" aria-labelledby="cta-titulo">
+      <img class="cta__img" src="images/chernyshart-coffee-9817634_1920.jpg" width="1920" height="1281" loading="lazy" alt="Balcão de madeira de uma cafeteria ao entardecer, com xícaras fumegantes, lâmpadas acesas e a rua ao fundo pela janela">
+      <div class="container reveal">
+        <span class="eyebrow">Assinatura mensal</span>
+        <h2 class="section-title" id="cta-titulo">Café fresco na sua porta, todo mês.</h2>
+        <p class="section-lead">Escolha seus cafés, receba toda semana de torra e cancele quando quiser. Seu primeiro pacote chega a tempo de você notar a diferença.</p>
+        <div class="offers">
+          <div class="offer"><strong>15% off</strong><span>em todos os pedidos da assinatura</span></div>
+          <div class="offer"><strong>Frete grátis</strong><span>em pedidos acima de R$ 120</span></div>
+        </div>
+        <a href="#cafes" class="btn btn--primary">Quero experimentar</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" id="loja">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <a href="#topo" class="brand"><span class="brand__dot" aria-hidden="true"></span>Grão Fundo</a>
+          <p>Micro-torrefação em Florianópolis. Torra semanal, lotes pequenos e grãos direto de quem planta.</p>
+        </div>
+        <div>
+          <h3>Visite a loja</h3>
+          <address>Rua das Algas, 214<br>Lagoa da Conceição<br>Florianópolis, SC · 88062-000</address>
+          <p style="margin-top:14px">Seg a sex: 8h às 18h<br>Sábado: 8h às 14h<br>Domingo: fechado</p>
+        </div>
+        <div>
+          <h3>Fale com a gente</h3>
+          <ul>
+            <li><a href="mailto:ola@graofundo.com.br">ola@graofundo.com.br</a></li>
+            <li><a href="tel:+554833330142">(48) 3333-0142</a></li>
+            <li><a href="#" aria-label="Instagram do Grão Fundo">Instagram @graofundo</a></li>
+            <li><a href="#" aria-label="WhatsApp do Grão Fundo">WhatsApp</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer__legal">© <span data-year>2026</span> Grão Fundo Torrefação. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      document.documentElement.classList.add('js');
+
+      // Menu móvel
+      var toggle = document.querySelector('.menu-toggle');
+      var menu = document.getElementById('menu');
+      function setMenu(open) {
+        menu.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+      }
+      toggle.addEventListener('click', function () {
+        setMenu(!menu.classList.contains('is-open'));
+      });
+      menu.addEventListener('click', function (e) {
+        if (e.target.closest('a')) setMenu(false);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') setMenu(false);
+      });
+
+      // Data da última torra: a torra é toda terça-feira
+      var hoje = new Date();
+      var diasDesdeTerca = (hoje.getDay() - 2 + 7) % 7;
+      var torra = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - diasDesdeTerca);
+      var texto = torra.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+      document.querySelectorAll('[data-roast-date]').forEach(function (el) { el.textContent = texto; });
+
+      document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = hoje.getFullYear(); });
+
+      // Entrada suave dos blocos ao rolar
+      var itens = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function (entradas) {
+          entradas.forEach(function (entrada) {
+            if (entrada.isIntersecting) {
+              entrada.target.classList.add('is-visible');
+              obs.unobserve(entrada.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        itens.forEach(function (el) { obs.observe(el); });
+      } else {
+        itens.forEach(function (el) { el.classList.add('is-visible'); });
+      }
+    })();
+  </script>
+</body>
+</html>
